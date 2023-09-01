@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "1IOFSq6hPaS1WjXegHP5A9se9LwNrW8GTe49nKGzRiaHgJpZQx25thk8IjpvDWX8bRG00bJ3NAnFKg3SY7qWow==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\zerop\\gitFetch\\parserCombinator_fsharp\\parserCombinator_fsharp.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\zerop\\.nuget\\packages\\fsharp.core\\7.0.300\\fsharp.core.7.0.300.nupkg.sha512"
+  ],
+  "logs": []
+}
