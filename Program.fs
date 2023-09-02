@@ -1,13 +1,14 @@
-﻿open Parser.ParserModule
+﻿open ParserModule
+open System
 
 let strParser = str "hll"
 
-let testParser = sequenceOf [
-    strParser
-    strParser
-    letters
+let testParser = choice [
+    // strParser
     digits
-    letter
+    letters
+    // strParser
+    // letter
     // digit
     // digit
 ]
