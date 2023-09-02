@@ -13,7 +13,7 @@ let testParser = choice [
     // digit
 ]
 
-let result = run testParser "hllhllldsad113l"
+let result = run testParser "hllhllldsad113lee123eaaaaaa"
 
 match result with
 | Ok(result) -> printfn $"{result}"

@@ -10,12 +10,15 @@ type ParserState = {
     Index: int32
 }
 
-let rec private getSlice (fn: char -> bool) (str: string): string =
-    if str.Length > 0 && fn str[0] then
-        (string str[0]) + (getSlice fn str[1..])
-    else
-        ""
+let rec private getSlice (fn: char -> bool) (str: string) : string =
+    let rec innerFn (fn: char -> bool) (str: string) (result: string) : string =
+        if str.Length > 0 && fn str[0] then
+            
+            innerFn fn (str.Substring(1)) (result + str.Substring(0, 1))
+        else
+            result
 
+    innerFn fn str ""
 
 let run
     (parser: Result<ParserState, string> -> Result<ParserState, string>)
@@ -40,8 +43,7 @@ let rec choice
     let rec tryEachParser parsers =
         match parsers with
         | [] -> Error "No parser" // never exec
-        | lastOne :: [] ->
-            lastOne state
+        | lastOne :: [] -> lastOne state
         | head :: tail ->
             let re = head (state)
             if Result.isOk re then re else tryEachParser tail
@@ -63,7 +65,7 @@ let letter (state: Result<ParserState, string>) : Result<ParserState, string> =
         if state.Rest.Length > 0 && Char.IsLetter state.Rest[0] then
             Ok(
                 {
-                    Matched = state.Matched @ [ string state.Rest[0] ]
+                    Matched = state.Matched @ [ state.Rest.Substring(0, 1) ]
                     Rest = state.Rest[1..]
                     Index = state.Index + 1
                 }
@@ -76,6 +78,7 @@ let letters (state: Result<ParserState, string>) : Result<ParserState, string> =
     |> Result.mapError (fun e -> e)
     |> Result.bind (fun state ->
         let matched = getSlice (fun x -> Char.IsLetter x) state.Rest
+
         if matched.Length > 0 then
             Ok(
                 {
@@ -94,7 +97,7 @@ let digit (state: Result<ParserState, string>) : Result<ParserState, string> =
         if state.Rest.Length > 0 && Char.IsNumber state.Rest[0] then
             Ok(
                 {
-                    Matched = state.Matched @ [ string state.Rest[0] ]
+                    Matched = state.Matched @ [ state.Rest.Substring(0, 1) ]
                     Rest = state.Rest[1..]
                     Index = state.Index + 1
                 }
