@@ -14,7 +14,7 @@ let rec private getSlice (fn: char -> bool) (str: string) : string =
     let rec innerFn (fn: char -> bool) (str: string) (result: string) : string =
         if str.Length > 0 && fn str[0] then
             
-            innerFn fn (str.Substring(1)) (result + str.Substring(0, 1))
+            innerFn fn str[1..] (result + str[0..0])
         else
             result
 
@@ -65,7 +65,7 @@ let letter (state: Result<ParserState, string>) : Result<ParserState, string> =
         if state.Rest.Length > 0 && Char.IsLetter state.Rest[0] then
             Ok(
                 {
-                    Matched = state.Matched @ [ state.Rest.Substring(0, 1) ]
+                    Matched = state.Matched @ [ state.Rest[0..0] ]
                     Rest = state.Rest[1..]
                     Index = state.Index + 1
                 }
@@ -97,7 +97,7 @@ let digit (state: Result<ParserState, string>) : Result<ParserState, string> =
         if state.Rest.Length > 0 && Char.IsNumber state.Rest[0] then
             Ok(
                 {
-                    Matched = state.Matched @ [ state.Rest.Substring(0, 1) ]
+                    Matched = state.Matched @ [ state.Rest[0..0] ]
                     Rest = state.Rest[1..]
                     Index = state.Index + 1
                 }

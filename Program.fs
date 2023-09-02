@@ -4,16 +4,11 @@ open System
 let strParser = str "hll"
 
 let testParser = choice [
-    // strParser
     digits
     letters
-    // strParser
-    // letter
-    // digit
-    // digit
 ]
 
-let result = run testParser "hllhllldsad113lee123eaaaaaa"
+let result = run testParser "hllhllldsad113lee123ea1aaaaa"
 
 match result with
 | Ok(result) -> printfn $"{result}"
