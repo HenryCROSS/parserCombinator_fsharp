@@ -10,10 +10,9 @@ type ParserState = {
     Index: int32
 }
 
-let rec private getSlice (fn: char -> bool) (str: string) : string =
+let private getSlice (fn: char -> bool) (str: string) : string =
     let rec innerFn (fn: char -> bool) (str: string) (result: string) : string =
         if str.Length > 0 && fn str[0] then
-            
             innerFn fn str[1..] (result + str[0..0])
         else
             result
