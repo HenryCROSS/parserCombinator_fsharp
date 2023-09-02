@@ -39,7 +39,7 @@ module ParserModule =
         state
         |> Result.mapError (fun e -> e)
         |> Result.bind (fun state ->
-            if Char.IsLetter state.Rest[0] then
+            if state.Rest.Length > 0 && Char.IsLetter state.Rest[0] then
                 Ok(
                     {
                         Matched = state.Matched @ [ string state.Rest[0] ]
@@ -68,7 +68,7 @@ module ParserModule =
         state
         |> Result.mapError (fun e -> e)
         |> Result.bind (fun state ->
-            if Char.IsNumber state.Rest[0] then
+            if state.Rest.Length > 0 && Char.IsNumber state.Rest[0] then
                 Ok(
                     {
                         Matched = state.Matched @ [ string state.Rest[0] ]
@@ -78,6 +78,20 @@ module ParserModule =
                 )
             else
                 Error $"Err: suppose to match digit (index: {state.Index + 1})")
+        
+    let digits (state: Result<ParserState, string>) : Result<ParserState, string> =
+        state
+        |> Result.mapError (fun e -> e)
+        |> Result.bind (fun state ->
+            let matched = String.filter (fun x -> Char.IsDigit x) state.Rest
+
+            Ok(
+                {
+                    Matched = state.Matched @ [ matched ]
+                    Rest = state.Rest[matched.Length ..]
+                    Index = state.Index + matched.Length
+                }
+            ))
 
     let str (pattern: string) (state: Result<ParserState, string>) : Result<ParserState, string> =
         state

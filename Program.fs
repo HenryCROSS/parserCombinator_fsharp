@@ -6,6 +6,9 @@ let testParser = sequenceOf [
     strParser
     strParser
     letters
+    digits
+    letter
+    // digit
     // digit
 ]
 
