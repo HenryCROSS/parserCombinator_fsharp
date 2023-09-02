@@ -15,7 +15,7 @@ module ParserModule =
         (parser: Result<ParserState, string> -> Result<ParserState, string>)
         (str: string)
         : Result<ParserState, string> =
-        let initStr = { Matched = []; Rest = str; Index = 0 }
+        let initStr = { Matched = []; Rest = str; Index = -1 }
         parser (Ok initStr)
 
     let rec sequenceOf
@@ -26,14 +26,16 @@ module ParserModule =
         | [] -> Error "No parser"
         | lastOne :: [] -> lastOne state
         | head :: tail -> sequenceOf tail (head state)
-    
+
     let choice
         (parsers: (Result<ParserState, string> -> Result<ParserState, string>) list)
         (state: Result<ParserState, string>)
         : Result<ParserState, string> =
+        let mutable flag = true
+
         Error "Not implement"
 
-    let anyLetter (state: Result<ParserState, string>) : Result<ParserState, string> =
+    let letter (state: Result<ParserState, string>) : Result<ParserState, string> =
         state
         |> Result.mapError (fun e -> e)
         |> Result.bind (fun state ->
@@ -47,6 +49,20 @@ module ParserModule =
                 )
             else
                 Error $"Err: suppose to match letter (index: {state.Index + 1})")
+
+    let letters (state: Result<ParserState, string>) : Result<ParserState, string> =
+        state
+        |> Result.mapError (fun e -> e)
+        |> Result.bind (fun state ->
+            let matched = String.filter (fun x -> Char.IsLetter x) state.Rest
+
+            Ok(
+                {
+                    Matched = state.Matched @ [ matched ]
+                    Rest = state.Rest[matched.Length ..]
+                    Index = state.Index + matched.Length
+                }
+            ))
 
     let digit (state: Result<ParserState, string>) : Result<ParserState, string> =
         state

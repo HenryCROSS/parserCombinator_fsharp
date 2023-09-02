@@ -5,11 +5,11 @@ let strParser = str "hll"
 let testParser = sequenceOf [
     strParser
     strParser
-    anyLetter
-    digit
+    letters
+    // digit
 ]
 
-let result = run testParser "hllhlll13l"
+let result = run testParser "hllhllldsad113l"
 
 match result with
 | Ok(result) -> printfn $"{result}"
